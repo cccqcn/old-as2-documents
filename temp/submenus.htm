@@ -1,0 +1,372 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>任意多级菜单的AS函数（列式）</title>
+<style type="text/css">
+<!--
+.style3 {font-size: 24px; font-weight: bold; font-family: "Comic Sans MS", "宋体";}
+.style4 {
+	font-size: 18px;
+	font-weight: bold;
+}
+body,td,th {
+	font-family: Comic Sans MS, 宋体;
+	font-size: 14px;
+}
+-->
+</style>
+</head>
+
+<body  >
+<table width="800" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td colspan="2">&nbsp;</td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="400" height="300">
+        <param name="movie" value="submenus.swf">
+        <param name="quality" value="high">
+        <embed src="submenus.swf" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="400" height="300"></embed>
+    </object></td>
+  </tr>
+  <tr>
+    <td colspan="2"><p>&nbsp;</p>
+        <p class="style3">createmc()</p>
+        <p class="style4">用法：</p>
+        <p>createmc(name, belongto)</p>
+        <p class="style4">参数：</p>
+        <p>name 菜单项的文字内容</p>
+        <p>belongto 菜单项所属的父级菜单的层级编号（这里的层级编号就是该菜单对应的影片剪辑的深度depth），如果是顶级菜单项，则为0</p>
+        <p class="style4">返回：</p>
+        <p>该菜单项的层级编号，即该菜单对应的影片剪辑的深度depth。</p>
+        <p class="style4">说明：</p>
+        <p>该函数建立一个列式菜单。当点击有子菜单的菜单项时，子菜单在打开的同时，所有位于子菜单下方的菜单项都将适当下移；当关闭子菜单时，所有位于子菜单下方的菜单项都将适当上移。但该函数生成的菜单项只能显示文本内容，位置可以通过变量指定。如果要用于其它地方，还需要对函数内容加以改进。所以这个函数只能学习研究用。</p>
+        <p>这个Flash是由下列代码生成的（包括函数定义）： </p>
+        <p>建议拷贝到Flash的AS面板里之后再看，会清晰些 </p>
+        <p>  
+        <hr>
+        <p></p>
+        <br>
+    </td>
+  </tr>
+  <tr>
+    <td><table cellpadding=""   bordercolor="#00FF00" bordercolorlight="#CCCCCC"bordercolordark="#666666" cellspacing="0" border="0">
+        <tr bordercolor="#999999">
+          <td width="764">no = 0;//影片层级变量</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>menux = 20, menuy = 40;;//菜单位置</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>function createmc(name, belongto) {</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>//根据name创建菜单项，返回该菜单的层级，以后的子级菜单只需指定所属父菜单的层级就可以自动完成了，顶级菜单的belongto为0</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;level = 0;//默认层级为0</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;findbelongto = belongto;//======这一段确定新增菜单项属于第几层级</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;while (findbelongto != 0) {</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;level++;</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;findbelongto = eval(&quot;mc&quot; + findbelongto).belongto;</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;}</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;var total0 = 0;//total0表示一共有多少顶级菜单项</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;for (var find0 = 0; find0 &lt; no; find0++) {</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (eval(&quot;mc&quot; + find0).belongto == 0) {</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;total0++;</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;}</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;_root.createEmptyMovieClip(&quot;mc&quot; + no, ++no);//菜单项的影片剪辑</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;eval(&quot;mc&quot; + no)._x = menux + level * 30;//根据层级缩进</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;eval(&quot;mc&quot; + no).subarray = new Array();//subarray数组保存该菜单项的所有子菜单层级编号</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;if (belongto == 0) {</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;eval(&quot;mc&quot; + no).belongto = 0;//顶级菜单的belongto属性为0</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;eval(&quot;mc&quot; + no)._y = menuy + total0 * 20;//确定顶级菜单的行值</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;} else {</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;eval(&quot;mc&quot; + no).belongto = belongto;//非顶级菜单的belongto由函数参数确定</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;eval(&quot;mc&quot; + no)._visible = false;//非顶级菜单初始化为不可见</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;eval(&quot;mc&quot; + no).self = eval(&quot;mc&quot; + belongto).subarray.length;//self表示该菜单项在所属的顶级菜单项中的位置</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;eval(&quot;mc&quot; + belongto).subarray.push(no);//为顶级菜单的子菜单数组加入该子菜单</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;}</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;eval(&quot;mc&quot; + no).createTextField(&quot;txt&quot;, 1, 0, 0, 100, 20);//显示菜单项的文本内容（可修改为任意其它内容，如果高度不一样还要做其它修改）</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;eval(&quot;mc&quot; + no).txt.text = name;</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;eval(&quot;mc&quot; + no).txt.autoSize = true;</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;eval(&quot;mc&quot; + no).onPress = function() {//点击菜单项打开子菜单（如果有），再次点击关闭子菜单（连同所有子级及子级包含的菜单）</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (this.subarray.length == 0) {不存在子菜单，返回（也可添加其它代码）</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return;</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (eval(&quot;mc&quot; + this.subarray[0])._visible != true) {//如果子菜单没有打开</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (var l0 = 0; l0 &lt; this.subarray.length; l0++) {</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;eval(&quot;mc&quot; + this.subarray[l0])._visible = true;//逐一打开子菜单</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;eval(&quot;mc&quot; + this.subarray[l0])._y = eval(&quot;mc&quot; + eval(&quot;mc&quot; + this.subarray[l0]).belongto)._y + eval(&quot;mc&quot; + this.subarray[l0]).self * 20;//根据子菜单所属的父级菜单及处于父级菜单的子菜单下的位置确定纵坐标值</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (var alli = 1; alli &lt;= no; alli++) {//循环检测所有菜单项，并判断</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (var allj = 0; allj &lt; this.subarray.length; allj++) {</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (alli == this.subarray[allj]) {//若是该菜单的父级菜单的子菜单项目，则跳过</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;alli++;</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;allj = -1;</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;continue;</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (allj == this.subarray.length &amp;&amp; alli != this._name.substr(2) &amp;&amp; eval(&quot;mc&quot; + alli)._y &gt; eval(&quot;mc&quot; + this.subarray[0])._y) {//若不是该菜单的父级菜单的子菜单项目，并且纵坐标值比该菜单的父级菜单的第一个菜单项的纵坐标值还大，则往下移动</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;eval(&quot;mc&quot; + alli)._y += (this.subarray.length - 1) * 20;//移动长度为该菜单的父级菜单的子菜单的总长度-1（第一个子菜单项与父级菜单项位于同样高度</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;} else {//如果子菜单已经打开</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;totaldelete = 0;//关闭菜单后，需要向上移动的距离</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (var alli = 1; alli &lt;= no; alli++) {//遍历所有菜单项</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;findbelongto = eval(&quot;mc&quot; + alli).belongto;//确定遍历的当前菜单项是否是这次点击的菜单项的某一级的子菜单</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while (findbelongto != this._name.substr(2) &amp;&amp; findbelongto != 0) {</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;level++;</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;findbelongto = eval(&quot;mc&quot; + findbelongto).belongto;</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (findbelongto == this._name.substr(2) &amp;&amp; eval(&quot;mc&quot; + alli)._visible != false) {//如果是则关闭</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;eval(&quot;mc&quot; + alli)._visible = false;</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;totaldelete += 1;//需要向上移动的距离增一</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (eval(&quot;mc&quot; + eval(&quot;mc&quot; + alli).belongto).subarray[0] == alli) {如果遍历的这个菜单项正好是它的父级菜单项的第一个子菜单项，则需要向上移动的距离减一（因为他们高度相同就不需要为这个高度移动两次）</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;totaldelete -= 1;</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for (var alli = 1; alli &lt;= no; alli++) {//遍历所有菜单项</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (alli != this._name.substr(2) &amp;&amp; eval(&quot;mc&quot; + alli)._y &gt; eval(&quot;mc&quot; + this._name.substr(2))._y) {//如果菜单项的纵坐标值比这次点击的菜单的纵坐标值大则往上移动</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;eval(&quot;mc&quot; + alli)._y -= totaldelete * 20;</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;};</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;return no;//返回这次新增菜单的层级</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>}</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>//Example begins here:</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>a1 = createmc(&quot;1&quot;, 0);</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>a11 = createmc(&quot;11&quot;, a1);</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>a12 = createmc(&quot;12&quot;, a1);</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>a111 = createmc(&quot;111&quot;, a11);</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>a112 = createmc(&quot;112&quot;, a11);</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>a1121 = createmc(&quot;1121&quot;, a112);</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>a1122 = createmc(&quot;1122&quot;, a112);</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>a113 = createmc(&quot;113&quot;, a11);</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>a1131 = createmc(&quot;1131&quot;, a113);</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>a1132 = createmc(&quot;1132&quot;, a113);</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>a121 = createmc(&quot;121&quot;, a12);</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>a122 = createmc(&quot;122&quot;, a12);</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>a2 = createmc(&quot;2&quot;, 0);</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>a21 = createmc(&quot;21&quot;, a2);</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>a22 = createmc(&quot;22&quot;, a2);</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>a211 = createmc(&quot;211&quot;, a21);</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>a212 = createmc(&quot;212&quot;, a21);</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>a221 = createmc(&quot;221&quot;, a22);</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>a222 = createmc(&quot;222&quot;, a22);</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>_root.lineStyle(1, 0xFF0000, 100);</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>_root.moveTo(0, 20);</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>for (rooti = 0; rooti &lt; 20; rooti++) {</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;_root.moveTo(0, rooti * 20);</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>&nbsp;&nbsp;&nbsp;&nbsp;_root.lineTo(300, rooti * 20);</td>
+        </tr>
+        <tr bordercolor="#999999">
+          <td>}</td>
+        </tr>
+        <tr>
+          <td>&nbsp;</td>
+        </tr>
+    </table></td>
+  </tr>
+</table>
+</body>
+</html>

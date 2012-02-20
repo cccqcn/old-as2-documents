@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>饼状数据分配图（3D）</title>
+<style type="text/css">
+<!--
+body,td,th {
+	font-family: Comic Sans MS, 宋体;
+	font-size: 14px;
+}
+.style1 {color: #FF0000}
+-->
+</style>
+</head>
+
+<body  ><BR>
+<table width="800" border="0" cellspacing="0" cellpadding="0" align="center">
+<tr>
+  <tr>
+    <td colspan="2" align="center"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="400" height="300">
+        <param name="movie" value="vote3d.swf">
+        <param name="quality" value="high">
+        <embed src="vote3d.swf" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="400" height="300"></embed>
+    </object></td>
+  </tr>
+    <td colspan="2"><p><strong>
+  颜色表现可以通过修改代码中的渲染部分改得更好看点（这也有待进一步摸索）</strong></p>
+        <p><strong>全部代码由两个函数组成，一个函数是根据数据数组生成图形，另一个是辅助功能。</strong></p>
+        <p><strong>我的网站是：http://<span class="style1">cccqcn</span>.6to23.com</strong></p>
+      <p>对于不同的数据只需重新定义<span class="style1">红色代码</span>部分的<span class="style1">数组</span>即可</p></td>
+  </tr>
+  <tr>
+    <td colspan="2"><p>//核心代码如下（产生圆形只需将_global.shape的值改为1即可）：</p>
+      <p>function generate(array) {<br>
+_global.total = new Object();<br>
+total.no = array.length;<br>
+total.percent = new Array();<br>
+total.percent = array;<br>
+total.theta = new Array();<br>
+for (i = 0, totaltheta = 0; i &lt; total.no; i++) {<br>
+total.theta[i] = total.percent[i] * Math.PI * 2 / 100 + totaltheta;<br>
+totaltheta = total.theta[i];<br>
+}<br>
+_global.shape = 3;<br>
+radius = 100;<br>
+_root.createEmptyMovieClip(&quot;mc&quot;, 1234);<br>
+mc._x = 120, mc._y = 120;<br>
+xy = new Object();<br>
+xy.x = 0, xy.y = radius;<br>
+xy.ox = xy.x, xy.oy = xy.y;<br>
+theta = 0;<br>
+depth = 1234;<br>
+for (i = 0; i &lt; total.no; i++) {<br>
+temptheta=total.theta[i-1] -Math.PI/2;<br>
+if(temptheta&lt;0)temptheta+=2*Math.PI;<br>
+if(isNaN(temptheta))temptheta=Math.PI*3/2; <br>
+if (temptheta &lt; Math.PI / 2||temptheta==Math.PI*3/2) {<br>
+depth -= 10;<br>
+}<br>
+if (temptheta &gt; Math.PI * 3 / 2) {<br>
+depth -= 100;<br>
+} else if (temptheta &gt;= Math.PI / 2) {<br>
+depth += 1000;<br>
+}<br>
+mc.createEmptyMovieClip(&quot;no&quot; + i, depth);<br>
+with (mc) {<br>
+VARcolor = 0x602F;<br>
+eval(&quot;no&quot; + i).linestyle(1, VARcolor * (i + 1) * 1000, 100);<br>
+colors = [VARcolor * (i + 1) * 10000, VARcolor * (i + 1) * 1000];<br>
+alphas = [100, 100];<br>
+ratios = [0x00, 0xFF];<br>
+matrix = {matrixType:&quot;box&quot;, x:-radius * 1.5, y:-radius * 1.5 / shape, w:radius * 3, h:radius * 3 / shape, r:(90 / 180) * Math.PI};<br>
+eval(&quot;no&quot; + i).beginGradientFill(&quot;radial&quot;, colors, alphas, ratios, matrix);<br>
+eval(&quot;no&quot; + i).moveTo(0, 0);<br>
+if(i!=0)<br>
+eval(&quot;no&quot; + i).lineTo(xy.ox, xy.oy);<br>
+xxyy = new Object();<br>
+xxyy.x = xy.x, xxyy.y = xy.y;<br>
+wtheta = theta;<br>
+while (theta &lt; total.theta[i]) {<br>
+xy = xyrotate(xy.x, xy.y, 0, 0, -0.01);<br>
+eval(&quot;no&quot; + i).lineTo(xy.x, xy.y / shape);<br>
+theta += 0.01;<br>
+}<br>
+eval(&quot;no&quot; + i).lineTo(0, 0);<br>
+eval(&quot;no&quot; + i).endFill();<br>
+if (_global.shape == 3) {<br>
+if (wtheta &gt; Math.PI / 2 &amp;&amp; wtheta &lt; Math.PI * 3 / 2) {<br>
+eval(&quot;no&quot; + i).beginGradientFill(&quot;radial&quot;, colors, alphas, ratios, matrix);<br>
+eval(&quot;no&quot; + i).moveTo(0, 0 - 10);<br>
+eval(&quot;no&quot; + i).lineTo(xy.ox, xy.oy - 10);<br>
+eval(&quot;no&quot; + i).lineTo(xy.ox, xy.oy);<br>
+eval(&quot;no&quot; + i).lineTo(0, 0);<br>
+eval(&quot;no&quot; + i).lineTo(0, 0 - 10);<br>
+eval(&quot;no&quot; + i).endFill();<br>
+eval(&quot;no&quot; + i).beginGradientFill(&quot;radial&quot;, colors, alphas, ratios, matrix);<br>
+eval(&quot;no&quot; + i).moveTo(0, 0 - 10);<br>
+eval(&quot;no&quot; + i).lineTo(xy.x, xy.y / shape - 10);<br>
+eval(&quot;no&quot; + i).lineTo(xy.x, xy.y / shape);<br>
+eval(&quot;no&quot; + i).lineTo(0, 0);<br>
+eval(&quot;no&quot; + i).lineTo(0, 0 - 10);<br>
+eval(&quot;no&quot; + i).endFill();<br>
+} else {<br>
+eval(&quot;no&quot; + i).beginGradientFill(&quot;radial&quot;, colors, alphas, ratios, matrix);<br>
+eval(&quot;no&quot; + i).moveTo(0, 0 - 10);<br>
+eval(&quot;no&quot; + i).lineTo(xy.x, xy.y / shape - 10);<br>
+eval(&quot;no&quot; + i).lineTo(xy.x, xy.y / shape);<br>
+eval(&quot;no&quot; + i).lineTo(0, 0);<br>
+eval(&quot;no&quot; + i).lineTo(0, 0 - 10);<br>
+eval(&quot;no&quot; + i).endFill();<br>
+eval(&quot;no&quot; + i).beginGradientFill(&quot;radial&quot;, colors, alphas, ratios, matrix);<br>
+eval(&quot;no&quot; + i).moveTo(0, 0 - 10);<br>
+if(i!=0)eval(&quot;no&quot; + i).lineTo(xy.ox, xy.oy - 10);<br>
+if(i!=0)eval(&quot;no&quot; + i).lineTo(xy.ox, xy.oy);<br>
+eval(&quot;no&quot; + i).lineTo(0, 0);<br>
+eval(&quot;no&quot; + i).lineTo(0, 0 - 10);<br>
+eval(&quot;no&quot; + i).endFill();<br>
+}<br>
+eval(&quot;no&quot; + i).beginGradientFill(&quot;radial&quot;, colors, alphas, ratios, matrix);<br>
+eval(&quot;no&quot; + i).moveTo(0, 0 - 10);<br>
+if(i!=0)eval(&quot;no&quot; + i).lineTo(xy.ox, xy.oy - 10);<br>
+
+while (wtheta &lt; total.theta[i]) {<br>
+xxyy = xyrotate(xxyy.x, xxyy.y, 0, 0, -0.01);<br>
+eval(&quot;no&quot; + i).lineTo(xxyy.x, xxyy.y / shape - 10);<br>
+if (Math.abs(wtheta - Math.PI) &lt; 0.01) {<br>
+eval(&quot;no&quot; + i).lineTo(xxyy.x, xxyy.y / shape);<br>
+eval(&quot;no&quot; + i).lineTo(xxyy.x, xxyy.y / shape - 10);<br>
+}<br>
+wtheta += 0.01;<br>
+}<br>
+eval(&quot;no&quot; + i).lineTo(0, 0 - 10);<br>
+eval(&quot;no&quot; + i).endFill();<br>
+}<br>
+eval(&quot;no&quot; + i).onPress = function() {<br>
+this.startDrag();<br>
+};<br>
+eval(&quot;no&quot; + i).onRelease = function() {<br>
+this.stopDrag();<br>
+};<br>
+}<br>
+xy.ox = xy.x, xy.oy = xy.y / shape;<br>
+}<br>
+}<br>
+function xyrotate(px, py, m, n, dtheta) {<br>
+//返回点（px，py）绕点（m，n）顺时针旋转dtheta度的坐标<br>
+dx = px - m, dy = py - n;<br>
+dis = Math.sqrt(dx * dx + dy * dy);<br>
+ptheta = Math.atan(-dy / dx);<br>
+ptheta = dx &lt; 0 ? ptheta + Math.PI : ptheta;<br>
+ptheta = ptheta &lt; 0 ? ptheta + 2 * Math.PI : ptheta;<br>
+var theta = ptheta - dtheta;<br>
+xy.x = m + dis * Math.cos(theta);<br>
+xy.y = n - dis * Math.sin(theta);<br>
+return xy;<br>
+}<br>
+<span class="style1">array = new Array(10,10, 40, 10, 30);<br>
+//array = new Array(20,10,10, 20, 10, 30);<br>
+//array = new Array(10,10, 80);<br>
+generate(array);</span><br>
+<br>
+      </p>
+    </td>
+  </tr>
+  
+    </table></td>
+  </tr>
+</table>
+</body>
+</html>
