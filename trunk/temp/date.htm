@@ -1,0 +1,233 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312">
+<title>日历（阳历）</title>
+<style type="text/css">
+<!--
+.style3 {font-size: 14px;  font-family: "Comic Sans MS", "宋体";}
+.style4 {
+	font-size: 12px;
+	font-weight: bold;
+}
+body,td,th {
+	font-family: Comic Sans MS, 宋体;
+	font-size: 12px;
+}
+-->
+</style>
+</head>
+
+<body  >
+<table width="800" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td align="center"><object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,29,0" width="400" height="300">
+        <param name="movie" value="date.swf">
+        <param name="quality" value="high">
+        <embed src="date.swf" quality="high" pluginspage="http://www.macromedia.com/go/getflashplayer" type="application/x-shockwave-flash" width="400" height="300"></embed>
+    </object></td>
+  </tr>
+  <tr>
+    <td><p>&nbsp;</p>
+        <p class="style3">//第172行为单击每一天时调用的函数，第15行为日历横纵座标（即_root.calendar的座标）<br>
+          _global.montharray = new Array(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31);<br>
+          _global.weekarray = new Array(&quot;日&quot;, &quot;一&quot;, &quot;二&quot;, &quot;三&quot;, &quot;四&quot;, &quot;五&quot;, &quot;六&quot;, &quot;七&quot;, &quot;八&quot;, &quot;九&quot;, &quot;十&quot;, &quot;十一&quot;, &quot;十二&quot;);<br>
+          _global.curdate = new Date();<br>
+          if (curdate.getYear() % 4 == 0) {<br>
+_global.montharray[1] = 29;<br>
+} else {<br>
+_global.montharray[1] = 28;<br>
+}<br>
+_global.curcalendar = new Object();<br>
+_global.curcalendar.year = _global.curdate.getFullYear();<br>
+_global.curcalendar.month = _global.curdate.getMonth() + 1;<br>
+_global.curcalendar.date = _global.curdate.getDate();<br>
+_root.createEmptyMovieClip(&quot;calendar&quot;, 78120);<br>
+calendar._x = 50, calendar._y = 20;<br>
+with (_root.calendar) {<br>
+createEmptyMovieClip(&quot;calendarcell&quot;, 111);<br>
+with (calendarcell) {<br>
+createEmptyMovieClip(&quot;monthbtn&quot;, 535);<br>
+monthbtn._x = 25;<br>
+monthbtn.createTextField(&quot;monthtxt&quot;, 536, 0, 0, 0, 20);<br>
+monthbtn.monthtxt.autoSize = true;<br>
+monthbtn.monthtxt.text = _global.weekarray[_global.curcalendar.month] + &quot;月&quot;;<br>
+monthbtn.onRelease = function() {<br>
+_root.monthbtn12.removeMovieClip();<br>
+};<br>
+monthbtn.onReleaseOutside = function() {<br>
+if (_xmouse &lt; _root.monthbtn12._x || _xmouse &gt; _root.monthbtn12._x + _root.monthbtn12._width || _ymouse &lt; _root.monthbtn12._y || _ymouse &gt; _root.monthbtn12._y + _root.monthbtn12._height + 15) {<br>
+_root.monthbtn12.removeMovieClip();<br>
+}<br>
+};<br>
+monthbtn.onPress = function() {<br>
+_root.createEmptyMovieClip(&quot;monthbtn12&quot;, 89993);<br>
+with (_root.monthbtn12) {<br>
+for (var i12 = 0; i12 &lt; 12; i12++) {<br>
+createEmptyMovieClip(&quot;monthbtn&quot; + i12, i12 + 19923);<br>
+eval(&quot;monthbtn&quot; + i12)._x = this._x - 5 + _root.calendar._x;<br>
+eval(&quot;monthbtn&quot; + i12)._y = this._y + i12 * 15 + 20 + _root.calendar._y;<br>
+eval(&quot;monthbtn&quot; + i12).createTextField(&quot;txt&quot;, 0, 0, 0, 0, 20);<br>
+eval(&quot;monthbtn&quot; + i12).txt.autoSize = true;<br>
+eval(&quot;monthbtn&quot; + i12).txt.text = _global.weekarray[i12 + 1] + &quot;月&quot;;<br>
+eval(&quot;monthbtn&quot; + i12).beginFill(0xFFFFFF, 100);<br>
+eval(&quot;monthbtn&quot; + i12).lineStyle(1, 0xFFFFFF, 100);<br>
+eval(&quot;monthbtn&quot; + i12).lineTo(eval(&quot;monthbtn&quot; + i12)._width, 0);<br>
+eval(&quot;monthbtn&quot; + i12).lineTo(eval(&quot;monthbtn&quot; + i12)._width, eval(&quot;monthbtn&quot; + i12)._height);<br>
+eval(&quot;monthbtn&quot; + i12).lineTo(0, eval(&quot;monthbtn&quot; + i12)._height);<br>
+eval(&quot;monthbtn&quot; + i12).lineTo(0, 0);<br>
+eval(&quot;monthbtn&quot; + i12).endFill();<br>
+eval(&quot;monthbtn&quot; + i12).onRollOver = function() {<br>
+_global.curcalendar.month = Number(this._name.substr(8)) + 1;<br>
+_root.calendar.calendarcell.monthbtn.monthtxt.text = _global.weekarray[_global.curcalendar.month] + &quot;月&quot;;<br>
+_root.drawcalendar();<br>
+_root.monthbtn12.removeMovieClip();<br>
+};<br>
+}<br>
+beginFill(0xFFFFFF, 100);<br>
+lineStyle(1, 0xFFFF, 100);<br>
+moveTo(eval(&quot;monthbtn&quot; + 11)._x-1, eval(&quot;monthbtn&quot; + 0)._y-1);<br>
+lineTo(eval(&quot;monthbtn&quot; + 11)._x + eval(&quot;monthbtn&quot; + 11)._width, this._y + 20 + _root.calendar._y-1);<br>
+lineTo(eval(&quot;monthbtn&quot; + 11)._x + eval(&quot;monthbtn&quot; + 11)._width, this._y + 20 + _root.calendar._y + _height-3);<br>
+lineTo(eval(&quot;monthbtn&quot; + 11)._x-1, eval(&quot;monthbtn&quot; + 0)._y + _height-3);<br>
+lineTo(eval(&quot;monthbtn&quot; + 11)._x-1, eval(&quot;monthbtn&quot; + 0)._y);<br>
+endFill();<br>
+}<br>
+};<br>
+createEmptyMovieClip(&quot;yearbtn&quot;, 538);<br>
+yearbtn.createTextField(&quot;yeartxt&quot;, 1225, monthbtn._x + 30 + 10, 0, 0, 20);<br>
+yearbtn.yeartxt.selectable = false;<br>
+yearbtn.yeartxt.autoSize = true;<br>
+yearbtn.yeartxt.text = _global.curcalendar.year;<br>
+yearbtn.onPress = function() {<br>
+if (_root.calendar.date49 == undefined) {<br>
+_root.drawcalendar();<br>
+} else {<br>
+_global.curcalendar.month = _global.curdate.getMonth() + 1;<br>
+_root.calendar.calendarcell.monthbtn.monthtxt.text = _global.weekarray[_global.curcalendar.month] + &quot;月&quot;;<br>
+_global.curcalendar.year = _global.curdate.getFullYear();<br>
+if (_global.curcalendar.year % 4 == 0) {<br>
+_global.montharray[1] = 29;<br>
+} else {<br>
+_global.montharray[1] = 28;<br>
+}<br>
+_root.calendar.calendarcell.yearbtn.yeartxt.text = _global.curcalendar.year;<br>
+_root.calendar.date49.removeMovieClip();<br>
+}<br>
+};<br>
+createEmptyMovieClip(&quot;yearbtn1&quot;, 533);<br>
+yearbtn1._x = yearbtn._x + 100, yearbtn1._y = yearbtn._y + 2;<br>
+yearbtn1.beginFill(0xFFFFFF, 0);<br>
+yearbtn1.lineStyle(1, 0x123456, 100);<br>
+yearbtn1.lineTo(-3, 6);<br>
+yearbtn1.lineTo(3, 6);<br>
+yearbtn1.lineTo(0, 0);<br>
+yearbtn1.endFill();<br>
+yearbtn1.onPress = function() {<br>
+if (_global.curcalendar.year - 1 &lt; 1900) {<br>
+return;<br>
+}<br>
+_global.curcalendar.year--;<br>
+if (_global.curcalendar.year % 4 == 0) {<br>
+_global.montharray[1] = 29;<br>
+} else {<br>
+_global.montharray[1] = 28;<br>
+}<br>
+_root.calendar.calendarcell.yearbtn.yeartxt.text = _global.curcalendar.year;<br>
+_root.drawcalendar();<br>
+};<br>
+createEmptyMovieClip(&quot;yearbtn2&quot;, 534);<br>
+yearbtn2._x = yearbtn._x + 100, yearbtn2._y = yearbtn._y + 17;<br>
+yearbtn2.beginFill(0xFFFFFF, 0);<br>
+yearbtn2.lineStyle(1, 0x123456, 100);<br>
+yearbtn2.lineTo(-3, -6);<br>
+yearbtn2.lineTo(3, -6);<br>
+yearbtn2.lineTo(0, 0);<br>
+yearbtn2.endFill();<br>
+yearbtn2.onPress = function() {<br>
+if (_global.curcalendar.year + 1 &gt; 2100) {<br>
+return;<br>
+}<br>
+_global.curcalendar.year++;<br>
+if (_global.curcalendar.year % 4 == 0) {<br>
+_global.montharray[1] = 29;<br>
+} else {<br>
+_global.montharray[1] = 28;<br>
+}<br>
+_root.calendar.calendarcell.yearbtn.yeartxt.text = _global.curcalendar.year;<br>
+_root.drawcalendar();<br>
+};<br>
+}<br>
+}<br>
+function drawcalendar() {<br>
+with (_root.calendar) {<br>
+createEmptyMovieClip(&quot;date49&quot;, 2322);<br>
+with (date49) {<br>
+var xi = 0, yi = 0, datecnt = 0, leftstart = 0;<br>
+for (var i = 0; i &lt; 49 &amp;&amp; datecnt &lt; _global.montharray[_global.curcalendar.month - 1]; i++) {<br>
+xi = (i % 7 == 0) ? leftstart : xi + 20;<br>
+yi = (i % 7 == 0) ? yi + 20 : yi;<br>
+createEmptyMovieClip(&quot;date&quot; + i, 1200 + i);<br>
+eval(&quot;date&quot; + i)._x = xi, eval(&quot;date&quot; + i)._y = yi;<br>
+eval(&quot;date&quot; + i).createTextField(&quot;txt&quot;, 12325, 0, 0, 20, 20);<br>
+eval(&quot;date&quot; + i).txt.selectable = false;<br>
+if (i &lt; 7) {<br>
+eval(&quot;date&quot; + i).txt.text = _global.weekarray[i];<br>
+} else {<br>
+tempdate = new Date(_global.curcalendar.year, _global.curcalendar.month - 1, 1);<br>
+if (datecnt &gt; 0) {<br>
+eval(&quot;date&quot; + i).txt.text = datecnt++ + 1;<br>
+eval(&quot;date&quot; + i).date = datecnt;<br>
+}<br>
+if (i &lt; 14 &amp;&amp; i % 7 == tempdate.getDay()) {<br>
+eval(&quot;date&quot; + i).txt.text = datecnt++ + 1;<br>
+eval(&quot;date&quot; + i).date = datecnt;<br>
+}<br>
+if (_global.curdate.getFullYear() == _global.curcalendar.year &amp;&amp; _global.curdate.getMonth() + 1 == _global.curcalendar.month &amp;&amp; _global.curdate.getDate() == datecnt) {<br>
+eval(&quot;date&quot; + i).txt.html = true;<br>
+eval(&quot;date&quot; + i).txt.htmlText = &quot;&lt;b&gt;&quot; + eval(&quot;date&quot; + i).txt.text + &quot;&lt;/b&gt;&quot;;<br>
+}<br>
+}<br>
+if (i &lt; 7) {<br>
+eval(&quot;date&quot; + i).beginFill(0xEAEAEA, 100);<br>
+} else {<br>
+eval(&quot;date&quot; + i).beginFill(0xFFFFFF, 100);<br>
+}<br>
+eval(&quot;date&quot; + i).lineStyle(1, 0xFFFFFF, 100);<br>
+eval(&quot;date&quot; + i).lineTo(eval(&quot;date&quot; + i)._width - 1, 0);<br>
+eval(&quot;date&quot; + i).lineTo(eval(&quot;date&quot; + i)._width - 2, eval(&quot;date&quot; + i)._height);<br>
+eval(&quot;date&quot; + i).lineTo(0, eval(&quot;date&quot; + i)._height - 1);<br>
+eval(&quot;date&quot; + i).lineTo(0, 0);<br>
+eval(&quot;date&quot; + i).endFill();<br>
+if (eval(&quot;date&quot; + i).date &gt; 0) {<br>
+eval(&quot;date&quot; + i).onPress = function() {<br>
+trace(_global.curcalendar.year + &quot;-&quot; + _global.curcalendar.month + &quot;-&quot; + this.date + &quot; 星期&quot; + _global.weekarray[this._name.substr(4) % 7]);<br>
+};<br>
+}<br>
+}<br>
+lineStyle(2, 0xCCCCCC, 100);<br>
+moveTo(-1, 0);<br>
+lineTo(_width, 0);<br>
+lineTo(_width - 5, _height - 1);<br>
+lineTo(-1, _height - 4);<br>
+lineTo(-1, 0);<br>
+moveTo(-1, 19);<br>
+lineStyle(1, 0xCCCCCC, 100);<br>
+lineTo(_width - 5, 19);<br>
+}<br>
+}<br>
+}<br>
+        </p>
+        <p>  
+        
+        <p></p>
+        <br>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

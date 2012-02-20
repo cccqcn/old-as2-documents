@@ -1,0 +1,134 @@
+createmc()
+
+用法：
+
+createmc(name, belongto)
+
+参数：
+
+name 菜单项的文字内容
+
+belongto 菜单项所属的父级菜单的层级编号（这里的层级编号就是该菜单对应的影片剪辑的深度depth），如果是顶级菜单项，则为0
+
+返回：
+
+该菜单项的层级编号，即该菜单对应的影片剪辑的深度depth。
+
+说明：
+
+该函数建立一个列式菜单。当点击有子菜单的菜单项时，子菜单在打开的同时，所有位于子菜单下方的菜单项都将适当下移；当关闭子菜单时，所有位于子菜单下方的菜单项都将适当上移。但该函数生成的菜单项只能显示文本内容，位置可以通过变量指定。如果要用于其它地方，还需要对函数内容加以改进。所以这个函数只能学习研究用。
+
+这个Flash是由下列代码生成的（包括函数定义）： 
+
+建议拷贝到Flash的AS面板里之后再看，会清晰些 
+
+
+
+--------------------------------------------------------------------------------
+
+
+ 
+no = 0;//影片层级变量 
+menux = 20, menuy = 40;;//菜单位置 
+function createmc(name, belongto) { 
+//根据name创建菜单项，返回该菜单的层级，以后的子级菜单只需指定所属父菜单的层级就可以自动完成了，顶级菜单的belongto为0 
+    level = 0;//默认层级为0 
+    findbelongto = belongto;//======这一段确定新增菜单项属于第几层级 
+    while (findbelongto != 0) { 
+        level++; 
+        findbelongto = eval("mc" + findbelongto).belongto; 
+    } 
+    var total0 = 0;//total0表示一共有多少顶级菜单项 
+    for (var find0 = 0; find0 < no; find0++) { 
+        if (eval("mc" + find0).belongto == 0) { 
+            total0++; 
+        } 
+    } 
+    _root.createEmptyMovieClip("mc" + no, ++no);//菜单项的影片剪辑 
+    eval("mc" + no)._x = menux + level * 30;//根据层级缩进 
+    eval("mc" + no).subarray = new Array();//subarray数组保存该菜单项的所有子菜单层级编号 
+    if (belongto == 0) { 
+        eval("mc" + no).belongto = 0;//顶级菜单的belongto属性为0 
+        eval("mc" + no)._y = menuy + total0 * 20;//确定顶级菜单的行值 
+    } else { 
+        eval("mc" + no).belongto = belongto;//非顶级菜单的belongto由函数参数确定 
+        eval("mc" + no)._visible = false;//非顶级菜单初始化为不可见 
+        eval("mc" + no).self = eval("mc" + belongto).subarray.length;//self表示该菜单项在所属的顶级菜单项中的位置 
+        eval("mc" + belongto).subarray.push(no);//为顶级菜单的子菜单数组加入该子菜单 
+    } 
+    eval("mc" + no).createTextField("txt", 1, 0, 0, 100, 20);//显示菜单项的文本内容（可修改为任意其它内容，如果高度不一样还要做其它修改） 
+    eval("mc" + no).txt.text = name; 
+    eval("mc" + no).txt.autoSize = true; 
+    eval("mc" + no).onPress = function() {//点击菜单项打开子菜单（如果有），再次点击关闭子菜单（连同所有子级及子级包含的菜单） 
+        if (this.subarray.length == 0) {不存在子菜单，返回（也可添加其它代码） 
+            return; 
+        } 
+        if (eval("mc" + this.subarray[0])._visible != true) {//如果子菜单没有打开 
+            for (var l0 = 0; l0 < this.subarray.length; l0++) { 
+                eval("mc" + this.subarray[l0])._visible = true;//逐一打开子菜单 
+                eval("mc" + this.subarray[l0])._y = eval("mc" + eval("mc" + this.subarray[l0]).belongto)._y + eval("mc" + this.subarray[l0]).self * 20;//根据子菜单所属的父级菜单及处于父级菜单的子菜单下的位置确定纵坐标值 
+            } 
+            for (var alli = 1; alli <= no; alli++) {//循环检测所有菜单项，并判断 
+                for (var allj = 0; allj < this.subarray.length; allj++) { 
+                    if (alli == this.subarray[allj]) {//若是该菜单的父级菜单的子菜单项目，则跳过 
+                        alli++; 
+                        allj = -1; 
+                        continue; 
+                    } 
+                } 
+                if (allj == this.subarray.length && alli != this._name.substr(2) && eval("mc" + alli)._y > eval("mc" + this.subarray[0])._y) {//若不是该菜单的父级菜单的子菜单项目，并且纵坐标值比该菜单的父级菜单的第一个菜单项的纵坐标值还大，则往下移动 
+                    eval("mc" + alli)._y += (this.subarray.length - 1) * 20;//移动长度为该菜单的父级菜单的子菜单的总长度-1（第一个子菜单项与父级菜单项位于同样高度 
+                } 
+            } 
+        } else {//如果子菜单已经打开 
+            totaldelete = 0;//关闭菜单后，需要向上移动的距离 
+            for (var alli = 1; alli <= no; alli++) {//遍历所有菜单项 
+                findbelongto = eval("mc" + alli).belongto;//确定遍历的当前菜单项是否是这次点击的菜单项的某一级的子菜单 
+                while (findbelongto != this._name.substr(2) && findbelongto != 0) { 
+                    level++; 
+                    findbelongto = eval("mc" + findbelongto).belongto; 
+                } 
+                if (findbelongto == this._name.substr(2) && eval("mc" + alli)._visible != false) {//如果是则关闭 
+                    eval("mc" + alli)._visible = false; 
+                    totaldelete += 1;//需要向上移动的距离增一 
+                    if (eval("mc" + eval("mc" + alli).belongto).subarray[0] == alli) {如果遍历的这个菜单项正好是它的父级菜单项的第一个子菜单项，则需要向上移动的距离减一（因为他们高度相同就不需要为这个高度移动两次） 
+                        totaldelete -= 1; 
+                    } 
+                } 
+            } 
+            for (var alli = 1; alli <= no; alli++) {//遍历所有菜单项 
+                if (alli != this._name.substr(2) && eval("mc" + alli)._y > eval("mc" + this._name.substr(2))._y) {//如果菜单项的纵坐标值比这次点击的菜单的纵坐标值大则往上移动 
+                    eval("mc" + alli)._y -= totaldelete * 20; 
+                } 
+            } 
+        } 
+    }; 
+    return no;//返回这次新增菜单的层级 
+} 
+//Example begins here: 
+a1 = createmc("1", 0); 
+a11 = createmc("11", a1); 
+a12 = createmc("12", a1); 
+a111 = createmc("111", a11); 
+a112 = createmc("112", a11); 
+a1121 = createmc("1121", a112); 
+a1122 = createmc("1122", a112); 
+a113 = createmc("113", a11); 
+a1131 = createmc("1131", a113); 
+a1132 = createmc("1132", a113); 
+a121 = createmc("121", a12); 
+a122 = createmc("122", a12); 
+a2 = createmc("2", 0); 
+a21 = createmc("21", a2); 
+a22 = createmc("22", a2); 
+a211 = createmc("211", a21); 
+a212 = createmc("212", a21); 
+a221 = createmc("221", a22); 
+a222 = createmc("222", a22); 
+_root.lineStyle(1, 0xFF0000, 100); 
+_root.moveTo(0, 20); 
+for (rooti = 0; rooti < 20; rooti++) { 
+    _root.moveTo(0, rooti * 20); 
+    _root.lineTo(300, rooti * 20); 
+} 
+ 

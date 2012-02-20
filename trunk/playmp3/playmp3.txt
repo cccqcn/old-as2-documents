@@ -1,0 +1,45 @@
+通过歌曲名播放MP3
+
+
+
+道理很简单，优点就是Flash的小，而且可以直接放到网页上，像个人主页什么的，更多功能也可以在Flash里开发出来。
+当然也可以用其他任何开发工具来实现这个功能。
+附件是根据这个方法做的一个简易播放器，Flash的，很小。
+
+代码如下：
+
+System.useCodepage = true;
+songname="黑猫警长";
+lv = new LoadVars();
+lv.load("http://mp3.baidu.com/m?f=ms&tn=baidump3&ct=134217728&rn=&word="+escape(songname)+"&lm=0");
+lv.onLoad = function() {
+	str = unescape(this);
+	flag = 0;
+	for (var i = 0; i < str.length; i++) {
+		if (str.substr(i, 4) == ".mp3") {
+			if (flag == 0) {
+				j=i
+				while (str.substr(j, 7) != "a href=" && str.substr(j, 23) != "a target=\"_blank\" href=") {
+					j--;
+				}
+				if (str.substr(j, 7) == "a href=") {
+					_global.mp3url = str.substr(j + 8, i - j - 4);
+				} else {
+					_global.mp3url = str.substr(j + 24, i - j - 20);
+				}
+				str1=_global.mp3url;
+				ij=0;
+				while(str1.substr(ij,3)!="&u="){
+					ij++;
+				}
+				_global.mp3url="http://mp3.baidu.com/u?n=2"+str1.substr(ij);
+				my_sound=new Sound();
+				my_sound.loadSound(_global.mp3url, true);
+				break;
+			}
+			flag = 1;
+		}
+	}
+};
+//只要在songname处输入歌曲名称，这段代码就可以在Flash里面播放该歌
+//通过百度搜索到的Mp3网址，供大家参考：）

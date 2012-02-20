@@ -1,0 +1,372 @@
+N = 20;//行数
+WIDTH = 20;//方块边长
+level = 0;//开始等级（下落速度）
+ret = new Array();//当前出现的方块
+nextret = new Array();//下一个出现的方块
+bg = new Array();//背景数组
+createEmptyMovieClip("panel", 1048575);//所有方块都在此mc里
+for (i = 0; i < 5; i++) {
+ //初始化方块数组，2*5格式，前四行代表每个方块的4个小块的位置坐标，最后一行第一列是方块形状，第二列是方块旋转方向
+ ret.push(new Array(2));
+ nextret.push(new Array(2));
+}
+for (i = 0; i < 20; i++) {//初始化背景数组，10*20格式
+ bg.push(new Array(10));
+}
+X = Y = panel._x = panel._y = 0;//换为X、Y表示
+function reach(x:Number, y:Number, ret:Object) {
+ //x、y为方块位置，ret为方块形状，若方块ret下落一格碰到边界或者方块返回1
+ var i:Number, j:Number, k:Number;
+ for (i = 0; i < N; i++) {
+  for (j = 0; j < 10; j++) {
+   if (bg[i][j] == 219) {
+    for (k = 0; k < 4; k++) {
+     if (x + ret[k][0] == j && y + ret[k][1] + 1 == i) {
+      return 1;
+     }
+    }
+   }
+  }
+ }
+ return 0;
+}
+function lrnotout(lorr:Number, a:Object) {
+ //lorr==-1代表a往左边一格可行性的判断，lorr==1代表右边一格可行性的判断，lorr==0代表a的位置合理性的判断，出现不合理则返回0
+ var i:Number;
+ if (lorr == -1) {
+  for (i = 0; i < 4; i++) {
+   if (x + a[i][0] - 1 < 0 || reach(x - 1, y - 1, a)) {
+    return 0;
+   }
+  }
+ }
+ if (lorr == 1) {
+  for (i = 0; i < 4; i++) {
+   if (x + a[i][0] + 1 > 9 || reach(x - 1, y + 1, a)) {
+    return 0;
+   }
+  }
+ }
+ if (lorr == 0) {
+  for (i = 0; i < 4; i++) {
+   if (x + a[i][0] < 0 || x + a[i][0] > 9) {
+    return 0;
+   }
+  }
+ }
+ return 1;
+}
+function rv(a:Object, ret:Object) {
+ //方块赋值，将a方块赋值到ret方块
+ var i:Number;
+ for (i = 0; i < 5; i++) {
+  ret[i][0] = a[i][0], ret[i][1] = a[i][1];
+ }
+}
+function rotate(ret:Object) {
+ //根据方块ret最后一行（分别是形状指示变量和旋转方向变量）为ret的前四行赋以具体形状值
+ switch (ret[4][0]) {
+ case 0 ://方形
+  a = [[1, 0], [2, 0], [1, 1], [2, 1], [0, 0]];
+  rv(a, ret);
+  return;
+ case 1 ://长形
+  switch (ret[4][1]) {
+  case 1 :
+   a = [[0, 0], [1, 0], [2, 0], [3, 0], [1, 0]];
+   if (lrnotout(0, a) && !reach(x, y - 1, a)) {
+    rv(a, ret);
+   }
+   return;
+  case 0 :
+   a = [[1, 0], [1, 1], [1, 2], [1, 3], [1, 1]];
+   if (lrnotout(0, a) && !reach(x, y - 1, a)) {
+    rv(a, ret);
+   }
+   return;
+  }
+ case 2 ://Z形
+  switch (ret[4][1]) {
+  case 1 :
+   a = [[0, 1], [1, 1], [1, 2], [2, 2], [2, 0]];
+   if (lrnotout(0, a) && !reach(x, y - 1, a)) {
+    rv(a, ret);
+   }
+   return;
+  case 0 :
+   a = [[2, 0], [1, 1], [2, 1], [1, 2], [2, 1]];
+   if (lrnotout(0, a) && !reach(x, y - 1, a)) {
+    rv(a, ret);
+   }
+   return;
+  }
+ case 3 ://反Z形
+  switch (ret[4][1]) {
+  case 1 :
+   a = [[1, 1], [2, 1], [0, 2], [1, 2], [3, 0]];
+   if (lrnotout(0, a) && !reach(x, y - 1, a)) {
+    rv(a, ret);
+   }
+   return;
+  case 0 :
+   a = [[1, 0], [1, 1], [2, 1], [2, 2], [3, 1]];
+   if (lrnotout(0, a) && !reach(x, y - 1, a)) {
+    rv(a, ret);
+   }
+   return;
+  }
+ case 4 ://T形
+  switch (ret[4][1]) {
+  case 3 :
+   a = [[1, 0], [0, 1], [1, 1], [2, 1], [4, 0]];
+   if (lrnotout(0, a) && !reach(x, y - 1, a)) {
+    rv(a, ret);
+   }
+   return;
+  case 0 :
+   a = [[1, 0], [0, 1], [1, 1], [1, 2], [4, 1]];
+   if (lrnotout(0, a) && !reach(x, y - 1, a)) {
+    rv(a, ret);
+   }
+   return;
+  case 1 :
+   a = [[0, 1], [1, 1], [2, 1], [1, 2], [4, 2]];
+   if (lrnotout(0, a) && !reach(x, y - 1, a)) {
+    rv(a, ret);
+   }
+   return;
+  case 2 :
+   a = [[1, 0], [1, 1], [2, 1], [1, 2], [4, 3]];
+   if (lrnotout(0, a) && !reach(x, y - 1, a)) {
+    rv(a, ret);
+   }
+   return;
+  }
+ case 5 ://倒L形
+  switch (ret[4][1]) {
+  case 3 :
+   a = [[1, 0], [2, 0], [1, 1], [1, 2], [5, 0]];
+   if (lrnotout(0, a) && !reach(x, y - 1, a)) {
+    rv(a, ret);
+   }
+   return;
+  case 0 :
+   a = [[0, 1], [0, 2], [1, 2], [2, 2], [5, 1]];
+   if (lrnotout(0, a) && !reach(x, y - 1, a)) {
+    rv(a, ret);
+   }
+   return;
+  case 1 :
+   a = [[2, 0], [2, 1], [1, 2], [2, 2], [5, 2]];
+   if (lrnotout(0, a) && !reach(x, y - 1, a)) {
+    rv(a, ret);
+   }
+   return;
+  case 2 :
+   a = [[0, 1], [1, 1], [2, 1], [2, 2], [5, 3]];
+   if (lrnotout(0, a) && !reach(x, y - 1, a)) {
+    rv(a, ret);
+   }
+   return;
+  }
+ case 6 ://L形
+  switch (ret[4][1]) {
+  case 3 :
+   a = [[1, 0], [2, 0], [2, 1], [2, 2], [5, 0]];
+   if (lrnotout(0, a) && !reach(x, y - 1, a)) {
+    rv(a, ret);
+   }
+   return;
+  case 0 :
+   a = [[0, 1], [1, 1], [2, 1], [0, 2], [5, 1]];
+   if (lrnotout(0, a) && !reach(x, y - 1, a)) {
+    rv(a, ret);
+   }
+   return;
+  case 1 :
+   a = [[1, 0], [1, 1], [1, 2], [2, 2], [5, 2]];
+   if (lrnotout(0, a) && !reach(x, y - 1, a)) {
+    rv(a, ret);
+   }
+   return;
+  case 2 :
+   a = [[2, 1], [0, 2], [1, 2], [2, 2], [5, 3]];
+   if (lrnotout(0, a) && !reach(x, y - 1, a)) {
+    rv(a, ret);
+   }
+   return;
+  }
+ }
+}
+function generate(ret:Object) {//随机产生方块函数（可进一步修正）
+ ret[4][0] = Math.floor(Math.random() * 7);
+ ret[4][1] = Math.floor(Math.random() * 4);
+ rotate(ret);//完成方块ret的具体形状的赋值
+}
+function init() {//初始化背景、方块、运动函数
+ var i:Number, j:Number;
+ for (i = 0; i < N; i++) {//初始化背景，边界为219，其余为' '
+  for (j = 0; j < 10; j++) {
+   if (i == N - 1) {
+    bg[i][j] = 219;
+   } else {
+    bg[i][j] = ' ';
+   }
+  }
+ }
+ for (i = 0; i < 5; i++) {//为当前方块赋初值0
+  ret[i][0] = ret[i][1] = 0;
+ }
+ generate(ret);//产生当前方块
+ generate(nextret);//产生下一个方块
+ y = 0, x = 3, score = lines = 0, level=0;//当前位置坐标和计分系统初始化
+ _tetris.removeTextField();//如果从结束过的游戏恢复，删除结束标志
+ display();//显示画面
+ frameflag = 0;//标示下落时间间隔
+ onEnterFrame = function () {
+  frameflag++;
+  if (10 - frameflag < level) {//根据等级level确定下落时间间隔
+   frameflag = 0;
+   go();//下落及判断
+  }
+ };
+}
+function drawblock(a, b, c, d) {//绘制方块的小块
+ with (panel) {
+  beginFill(0x000FFF, 100);
+  lineStyle(1, 0xFF00FF);
+  moveTo(panel._x + a, panel._y + b);
+  lineTo(panel._x + c, panel._y + b);
+  lineTo(panel._x + c, panel._y + d);
+  lineTo(panel._x + a, panel._y + d);
+  lineTo(panel._x + a, panel._y + b);
+  endFill();
+ }
+}
+function erase() {//删除一行方块
+ var n:Number = 0, i:Number, j:Number, k:Number, l:Number;
+ for (i = 0; i < N - 1; i++) {
+  for (j = 0; j < 10; j++) {
+   if (bg[i][j] == ' ') {//如果该行有空，则开始判断下一行
+    i++, j = -1;
+    if (i == N - 1) {//行N-1为底线，不判断
+     break;
+    }
+   } else if (j == 9) {//判断到该行最后一列都没有空
+    for (k = i; k >= 1; k--) {//上方方块下落
+     for (l = 0; l < 10; l++) {
+      bg[k][l] = bg[k - 1][l];
+     }
+    }
+    for (l = 0; l < 10; l++) {//删除该行
+     bg[0][l] = ' ';
+    }
+    n++;//此次删除行数变量增一
+    if ((lines + n) % 30 == 0) {//删除行数总数到30的倍数则等级上升
+     level = (level + 1) % 10;
+    }
+   }
+  }
+ }
+ lines += n, score += (n * n + n) * 50;//总行数增n，计算得分
+}
+function display() {
+ //显示函数，采用全部清除再重绘制的方法（因为这个程序本来是在Turbo C 2.0的文本环境下完成的）
+ var i:Number, j:Number;
+ panel.clear();
+ with (panel) {//画边界
+  lineStyle(1, 0x0000FF);
+  moveTo(panel._x, panel._y);
+  lineTo(panel._x + WIDTH * 10, panel._y);
+  lineTo(panel._x + WIDTH * 10, panel._y + WIDTH * (N - 1));
+  lineTo(panel._x, panel._y + WIDTH * (N - 1));
+  lineTo(panel._x, panel._y);
+ }
+ for (i = 0; i < 4; i++) {//当前方块占据的地方赋值为边界类型219
+  bg[y + ret[i][1]][x + ret[i][0]] = 219;
+ }
+ for (i = 0; i < N - 1; i++) {//绘制背景方块
+  for (j = 0; j < 10; j++) {
+   if (bg[i][j] == 219) {
+    drawblock(j * WIDTH + X, i * WIDTH + Y, j * WIDTH + WIDTH + X, i * WIDTH + WIDTH + Y);
+   }
+  }
+ }
+ for (i = 0; i < 4; i++) {//绘制当前方块
+  drawblock(nextret[i][0] * WIDTH + 14 * WIDTH + X, nextret[i][1] * WIDTH + 12 * WIDTH + Y, nextret[i][0] * WIDTH + WIDTH + 14 * WIDTH + X, nextret[i][1] * WIDTH + WIDTH + 12 * WIDTH + Y);
+ }
+ for (i = 0; i < 4; i++) {//当前方块绘制完毕，重新将当前位置改为' '
+  bg[y + ret[i][1]][x + ret[i][0]] = ' ';
+ }
+ createTextField("_lvltxt", 1, 270, 100, 100, 20);//绘制计分系统
+ createTextField("_scrtxt", 2, 270, 130, 100, 20);
+ createTextField("_lnstxt", 3, 270, 160, 100, 20);
+ _lvltxt.text = "Level:  " + level;
+ _scrtxt.text = "Score:  " + score;
+ _lnstxt.text = "Lines:  " + lines;
+}
+function go() {//下落函数
+ var sss:Number = reach(x, y, ret);//当前方块下落一格是否碰到边界或方块
+ var ii:Number;
+ if (!sss) {
+  y++;//如果当前方块下落一格没有碰到边界或方块则下落一格
+ }
+ display();//重新绘制
+ if (sss) {//碰到边界或方块
+  score += 10;//得10分
+  display();//重新绘制
+  for (ii = 0; ii < 4; ii++) {//修改背景数组，将当前方块的位置改为边界类型
+   bg[y + ret[ii][1]][x + ret[ii][0]] = 219;
+  }
+  erase();//删除行判断及执行
+  rv(nextret, ret);//将下一个方块赋值为当前方块
+  y = 0, x = 3;//重置方块位置
+  generate(nextret);//生成下一个方块
+  display();//重新绘制
+  if (reach(x, y, ret)) {//如果下一格碰到方块则游戏结束
+   createTextField("_tetris", 100000, WIDTH * 3.3, WIDTH * N / 3, 70, 20);
+   _tetris._x += 200;
+   _tetris._y += 50;
+   _tetris._xscale = 300;
+   _tetris._yscale = 300;
+   _tetris.background = true;
+   _tetris.text = "Game Over!";
+   onEnterFrame = function () {//停止下落
+   };
+  }
+ }
+}
+function key() {
+ if (Key.isDown(Key.UP)) {
+  rotate(ret);
+  display();
+ }
+ if (Key.isDown(Key.LEFT)) {
+  if (lrnotout(-1, ret)) {//左移可行性判断
+   x--;
+   display();
+  }
+ }
+ if (Key.isDown(Key.RIGHT)) {
+  if (lrnotout(1, ret)) {//右移可行性判断
+   x++;
+   display();
+  }
+ }
+ if (Key.isDown(Key.DOWN)) {//键盘控制下落
+  go();
+ }
+ if (Key.isDown(Key.SPACE)) {//一键下落到底
+  while (!reach(x, y, ret)) {
+   y++;
+  }
+  go();
+ }
+ if (Key.isDown(82)) {  //重新开始游戏
+  init();
+ }
+}
+init();//初始化
+setInterval(key, 80);//每个80毫秒执行一次键盘事件函数
+createTextField("hinttxt",33324,200,20,300,50);
+hinttxt.text="键盘键：上,下,左,右,R（reset）,空格";
