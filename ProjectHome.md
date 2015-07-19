@@ -1,0 +1,1 @@
+The programs in the beginning of flash study, coding in AS2 and in FLA files. Include the graduate design, the little game won a mobile phone, the swf files that showed to find job. And some early study for fun.
